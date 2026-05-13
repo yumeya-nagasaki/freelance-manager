@@ -60,3 +60,68 @@ flowchart TD
     C --> D[ClientRepository]
     D --> E[Database]
 ```
+
+### 動作確認用コマンド
+
+Powershellから実行する場合は以下のコマンドで確認する
+
+* 登録
+```text
+$body = @{
+  name = "Example株式会社"
+  email = "contact@example.com"
+  memo = "初回登録"
+} | ConvertTo-Json
+
+$utf8Body = [System.Text.Encoding]::UTF8.GetBytes($body)
+
+Invoke-RestMethod `
+  -Uri "http://localhost:8080/api/clients" `
+  -Method Post `
+  -ContentType "application/json; charset=utf-8" `
+  -Body $utf8Body
+```
+
+* 一覧取得
+```text
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+Invoke-RestMethod `
+  -Uri "http://localhost:8080/api/clients" `
+  -Method Get
+```
+
+* 取得
+```text
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+Invoke-RestMethod `
+  -Uri "http://localhost:8080/api/clients/1" `
+  -Method Get
+```
+
+* 更新
+```text
+$body = @{
+  name = "Example株式会社"
+  email = "contact@example.com"
+  memo = "更新しました"
+} | ConvertTo-Json
+
+$utf8Body = [System.Text.Encoding]::UTF8.GetBytes($body)
+
+Invoke-RestMethod `
+  -Uri "http://localhost:8080/api/clients/1" `
+  -Method Put `
+  -ContentType "application/json; charset=utf-8" `
+  -Body $utf8Body
+```
+
+* 削除
+```text
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+Invoke-RestMethod `
+  -Uri "http://localhost:8080/api/clients/1" `
+  -Method Delete
+```
