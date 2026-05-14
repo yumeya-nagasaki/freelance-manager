@@ -125,3 +125,29 @@ Invoke-RestMethod `
   -Uri "http://localhost:8080/api/clients/1" `
   -Method Delete
 ```
+
+### エラー処理について
+
+* 存在しない{id}が指定された場合、404 NotFoundが返却されます
+```text
+Invoke-RestMethod:
+{
+  "status": 404,
+  "error": "Not Found",
+  "message": "client not found. id=999",
+  "path": "/api/clients/999",
+  "timestamp": "2026-05-14T23:34:52.9999772"
+}
+```
+
+* パラメータのバリデーションに問題がある場合、400 BadRequestが返却されます
+```text
+Invoke-RestMethod:
+{
+  "status": 400,
+  "error": "Bad Request",
+  "message": "email: 電子メールアドレスとして正しい形式にしてください",
+  "path": "/api/clients",
+  "timestamp": "2026-05-14T23:37:27.7998495"
+}
+```
