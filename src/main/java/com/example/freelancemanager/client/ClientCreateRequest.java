@@ -17,6 +17,16 @@ public class ClientCreateRequest {
     @Size(max = 1000)
     private String memo;
 
+    public ClientCreateRequest() {
+        // Jackson用にデフォルトコンストラクタを残す
+    }
+
+    public ClientCreateRequest(String name, String email, String memo) {
+        this.name = name;
+        this.email = email;
+        this.memo = memo;
+    }
+
     public String getName() {
         return name;
     }
