@@ -8,9 +8,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
+@Entity
 public class Project {
     
     @Id
@@ -21,6 +25,7 @@ public class Project {
     private String name;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ContractType contractType;
 
     @Column(nullable = false)
@@ -38,6 +43,7 @@ public class Project {
     private LocalDate endDate;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
     @Column(length = 1000)
