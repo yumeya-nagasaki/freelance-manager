@@ -29,12 +29,9 @@ public class Project {
     private ContractType contractType;
 
     @Column(nullable = false)
-    @Min(0)
     private Integer unitPrice;
 
     @Column(nullable = false)
-    @Min(1)
-    @Max(100)
     private Integer workRate;
 
     @Column(nullable = false)
