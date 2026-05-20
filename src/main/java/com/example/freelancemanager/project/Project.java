@@ -1,8 +1,6 @@
 package com.example.freelancemanager.project;
 
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
