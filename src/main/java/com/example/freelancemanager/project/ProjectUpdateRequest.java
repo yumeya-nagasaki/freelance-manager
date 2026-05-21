@@ -2,8 +2,6 @@ package com.example.freelancemanager.project;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -17,7 +15,6 @@ public class ProjectUpdateRequest {
     private String name;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     private ContractType contractType;
 
     @NotNull
@@ -35,7 +32,6 @@ public class ProjectUpdateRequest {
     private LocalDate endDate;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
     @Size(max = 1000)
