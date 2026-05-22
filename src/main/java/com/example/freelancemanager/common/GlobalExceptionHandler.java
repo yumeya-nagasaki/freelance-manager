@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -35,9 +36,9 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
         String message = ex.getBindingResult()
-            .getFieldErrors()
+            .getAllErrors()
             .stream()
-            .map(this::formatFieldError)
+            .map(this::formatValidationError)
             .collect(Collectors.joining(", "));
         
         ErrorResponse response = new ErrorResponse(
@@ -50,7 +51,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(response);
     }
 
-    private String formatFieldError(FieldError fieldError) {
-        return fieldError.getField() + ": " + fieldError.getDefaultMessage();
+    private String formatValidationError(ObjectError error) {
+        if (error instanceof FieldError fieldError) {
+            return fieldError.getField() + ": " + fieldError.getDefaultMessage();
+        }
+    
+        return error.getDefaultMessage();
     }
 }

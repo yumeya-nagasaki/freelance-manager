@@ -2,13 +2,17 @@ package com.example.freelancemanager.project;
 
 import java.time.LocalDate;
 
+import com.example.freelancemanager.project.validation.ProjectDateRangeRequest;
+import com.example.freelancemanager.project.validation.ValidProjectDateRange;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class ProjectCreateRequest {
+@ValidProjectDateRange
+public class ProjectCreateRequest implements ProjectDateRangeRequest {
     
     @NotBlank
     @Size(max = 100)
