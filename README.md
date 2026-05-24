@@ -334,7 +334,7 @@ Invoke-RestMethod:
 {
   "status": 404,
   "error": "Not Found",
-  "message": "Project not found. id=999",
+  "message": "project not found. id=999",
   "path": "/api/projects/999",
   "timestamp": "2026-05-18T22:00:00.0000000"
 }
