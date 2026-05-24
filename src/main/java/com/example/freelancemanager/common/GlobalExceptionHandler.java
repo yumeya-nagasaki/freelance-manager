@@ -4,11 +4,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -57,5 +60,53 @@ public class GlobalExceptionHandler {
         }
     
         return error.getDefaultMessage();
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
+        HttpMessageNotReadableException ex, 
+        HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        String message = "リクエストの形式が不正です";
+
+        if (ex.getCause() instanceof InvalidFormatException invalidFormatException
+                && invalidFormatException.getTargetType().isEnum()) {
+            
+            String fieldName = getInvalidFieldName(invalidFormatException);
+
+            message = fieldName + "：指定された値が不正です。使用可能な値： "
+                    + String.join(", ", getEnumValues(invalidFormatException.getTargetType()));
+        }
+
+        ErrorResponse response = new ErrorResponse(
+            status.value(), 
+            status.getReasonPhrase(), 
+            message, 
+            request.getRequestURI()
+        );
+
+        return ResponseEntity.status(status).body(response);
+    }
+
+    private String getInvalidFieldName(InvalidFormatException ex) {
+        if (ex.getPath().isEmpty()) {
+            return "unknown";
+        }
+
+        return ex.getPath().get(ex.getPath().size() - 1).getFieldName();
+    }
+
+    private String[] getEnumValues(Class<?> enumType) {
+        Object[] enumConstants = enumType.getEnumConstants();
+
+        String[] values = new String[enumConstants.length];
+
+        for (int i = 0; i < enumConstants.length; i++) {
+            values[i] = enumConstants[i].toString();
+        }
+
+        return values;
     }
 }

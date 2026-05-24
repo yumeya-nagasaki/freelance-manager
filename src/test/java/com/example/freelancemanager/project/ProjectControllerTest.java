@@ -87,4 +87,54 @@ public class ProjectControllerTest {
                 .andExpect(jsonPath("$.error").value("Bad Request"))
                 .andExpect(jsonPath("$.message").value("終了日は開始日以降の日付にしてください"));
     }
+
+    @Test
+    void create_contractTypeに不正な値を指定した場合400BadRequestを返す() throws Exception {
+        mockMvc.perform(post("/api/projects")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                        {
+                          "name": "業務管理システム開発",
+                          "contractType": "INVALID",
+                          "unitPrice": 600000,
+                          "workRate": 100,
+                          "startDate": "2026-06-01",
+                          "endDate": "2026-12-31",
+                          "status": "ACTIVE",
+                          "memo": "契約形態が不正"
+                        }
+                        """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value(
+                        "contractType：指定された値が不正です。使用可能な値： FIXED_PRICE, MONTHLY, HOURLY"
+                ))
+                .andExpect(jsonPath("$.path").value("/api/projects"));
+    }
+
+    @Test
+    void create_statusに不正な値を指定した場合400BadRequestを返す() throws Exception {
+        mockMvc.perform(post("/api/projects")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                        {
+                          "name": "業務管理システム開発",
+                          "contractType": "MONTHLY",
+                          "unitPrice": 600000,
+                          "workRate": 100,
+                          "startDate": "2026-06-01",
+                          "endDate": "2026-12-31",
+                          "status": "INVALID",
+                          "memo": "案件ステータスが不正"
+                        }
+                        """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value(
+                        "status：指定された値が不正です。使用可能な値： PREPARING, ACTIVE, SUSPENDED, COMPLETED, CANCELED"
+                ))
+                .andExpect(jsonPath("$.path").value("/api/projects"));
+    }
 }
