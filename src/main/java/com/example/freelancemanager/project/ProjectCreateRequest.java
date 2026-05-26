@@ -41,13 +41,25 @@ public class ProjectCreateRequest implements ProjectDateRangeRequest {
     @Size(max = 1000)
     private String memo;
 
+    @NotNull
+    private Long clientId;
+
     public ProjectCreateRequest() {
         // Jackson用にデフォルトコンストラクタを残す
     }
 
-    public ProjectCreateRequest(String name, ContractType contractType, Integer unitPrice, Integer workRate, 
-        LocalDate startDate, LocalDate endDate, ProjectStatus status, String memo) 
-    {
+    public ProjectCreateRequest(
+            Long clientId, 
+            String name, 
+            ContractType contractType, 
+            Integer unitPrice, 
+            Integer workRate, 
+            LocalDate startDate, 
+            LocalDate endDate, 
+            ProjectStatus status, 
+            String memo
+    ) {
+        this.clientId = clientId;
         this.name = name;
         this.contractType = contractType;
         this.unitPrice = unitPrice;
@@ -56,6 +68,10 @@ public class ProjectCreateRequest implements ProjectDateRangeRequest {
         this.endDate = endDate;
         this.status = status;
         this.memo = memo;
+    }
+
+    public Long getClientId() {
+        return clientId;
     }
 
     public String getName() {

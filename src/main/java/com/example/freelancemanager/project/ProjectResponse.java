@@ -16,6 +16,7 @@ public class ProjectResponse {
     private String memo;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long clientId;
 
     public ProjectResponse(Project project) {
         this.id = project.getId();
@@ -29,6 +30,7 @@ public class ProjectResponse {
         this.memo = project.getMemo();
         this.createdAt = project.getCreatedAt();
         this.updatedAt = project.getUpdatedAt();
+        this.clientId = project.getClient().getId();
     }
 
     public Long getId() {
@@ -73,5 +75,9 @@ public class ProjectResponse {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Long getClientId() {
+        return clientId;
     }
 }
