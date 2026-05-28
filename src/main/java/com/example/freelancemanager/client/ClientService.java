@@ -6,16 +6,20 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.freelancemanager.common.ConflictException;
 import com.example.freelancemanager.common.NotFoundException;
+import com.example.freelancemanager.project.ProjectRepository;
 
 @Service
 @Transactional
 public class ClientService {
 
     private final ClientRepository clientRepository;
+    private final ProjectRepository projectRepository;
 
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository, ProjectRepository projectRepository) {
         this.clientRepository = clientRepository;
+        this.projectRepository = projectRepository;
     }
 
     public ClientResponse create(ClientCreateRequest request) {
@@ -54,6 +58,10 @@ public class ClientService {
     public void delete(@NonNull Long id) {
         if (!clientRepository.existsById(id)) {
             throw new NotFoundException("client not found. id=" + id);
+        }
+
+        if (projectRepository.existsByClientId(id)) {
+            throw new ConflictException("client has projects. id=" + id);
         }
 
         clientRepository.deleteById(id);

@@ -138,3 +138,15 @@ Project登録時に存在しない `clientId` が指定された場合、`404 No
   "timestamp": "2026-05-18T22:00:00"
 }
 ```
+
+Client削除時にProjectが存在する場合、`409 Conflict` を返します。
+
+```json
+{
+  "status": 409,
+  "error": "Conflict",
+  "message": "client has projects. id=1",
+  "path": "/api/clients/1",
+  "timestamp": "2026-05-18T22:00:00"
+}
+```
