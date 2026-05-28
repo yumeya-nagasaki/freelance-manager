@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.freelancemanager.project.ProjectResponse;
+import com.example.freelancemanager.project.ProjectService;
+
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,9 +27,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class ClientController {
     
     private final ClientService clientService;
+    private final ProjectService projectService;
 
-    public ClientController(ClientService clientService) {
+    public ClientController(ClientService clientService, ProjectService projectService) {
         this.clientService = clientService;
+        this.projectService = projectService;
     }
 
     @PostMapping
@@ -54,5 +59,10 @@ public class ClientController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable @NonNull Long id) {
         clientService.delete(id);
+    }
+
+    @GetMapping("/{id}/projects")
+    public List<ProjectResponse> findProjectsByClientId(@PathVariable @NonNull Long id) {
+        return projectService.findByClientId(id);
     }
 }

@@ -1,14 +1,19 @@
 package com.example.freelancemanager.project;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.example.freelancemanager.client.Client;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
@@ -50,13 +55,26 @@ public class Project {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
     protected Project() {
 
     }
 
-    public Project(String name, ContractType contractType, Integer unitPrice, Integer workRate, 
-        LocalDate startDate, LocalDate endDate, ProjectStatus status, String memo) 
-    {
+    public Project(
+            Client client,
+            String name, 
+            ContractType contractType, 
+            Integer unitPrice, 
+            Integer workRate, 
+            LocalDate startDate, 
+            LocalDate endDate, 
+            ProjectStatus status, 
+            String memo
+    ) {
+        this.client = client;
         this.name = name;
         this.contractType = contractType;
         this.unitPrice = unitPrice;
@@ -67,6 +85,10 @@ public class Project {
         this.memo = memo;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public Client getClient() {
+        return client;
     }
 
     public Long getId() {

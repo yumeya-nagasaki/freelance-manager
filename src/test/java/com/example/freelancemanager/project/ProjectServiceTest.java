@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.example.freelancemanager.client.Client;
+import com.example.freelancemanager.client.ClientRepository;
 import com.example.freelancemanager.common.NotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,12 +28,16 @@ public class ProjectServiceTest {
     @Mock
     private ProjectRepository projectRepository;
 
+    @Mock
+    private ClientRepository clientRepository;
+
     @InjectMocks
     private ProjectService projectService;
 
     @Test
     void create_正常にProjectを登録できる() {
         ProjectCreateRequest request = new ProjectCreateRequest(
+            1L,
             "Example案件",
             ContractType.FIXED_PRICE,
             100000,
@@ -40,9 +46,16 @@ public class ProjectServiceTest {
             LocalDate.of(2026, 12, 31),
             ProjectStatus.ACTIVE,
             "初回登録"
+        );
+
+        Client client = new Client(
+            "Example株式会社",
+            "contact@example.com",
+            "テストクライアント"
         );
 
         Project savedProject = new Project(
+            client,
             "Example案件",
             ContractType.FIXED_PRICE,
             100000,
@@ -53,6 +66,7 @@ public class ProjectServiceTest {
             "初回登録"
         );
 
+        when(clientRepository.findById(1L)).thenReturn(Optional.of(client));
         when(projectRepository.save(notNull(Project.class))).thenReturn(savedProject);
 
         ProjectResponse response = projectService.create(request);
@@ -69,7 +83,15 @@ public class ProjectServiceTest {
 
     @Test
     void findAll_Project一覧を取得できる() {
+
+        Client client = new Client(
+            "Example株式会社",
+            "contact@example.com",
+            "テストクライアント"
+        );
+
         Project project = new Project(
+            client,
             "Example案件",
             ContractType.FIXED_PRICE,
             100000,
@@ -90,7 +112,15 @@ public class ProjectServiceTest {
 
     @Test
     void findById_存在するIDの場合Projectを取得できる() {
+
+        Client client = new Client(
+            "Example株式会社",
+            "contact@example.com",
+            "テストクライアント"
+        );
+
         Project project = new Project(
+            client,
             "Example案件",
             ContractType.FIXED_PRICE,
             100000,
@@ -119,7 +149,15 @@ public class ProjectServiceTest {
 
     @Test
     void update_存在するIDの場合Projectを更新できる() {
+
+        Client client = new Client(
+            "Example株式会社",
+            "contact@example.com",
+            "テストクライアント"
+        );
+
         Project project = new Project(
+            client,
             "Example案件",
             ContractType.FIXED_PRICE,
             100000,

@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.example.freelancemanager.client.Client;
 import com.example.freelancemanager.common.NotFoundException;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +36,15 @@ public class ProjectControllerTest {
 
     @Test
     void create_正常なリクエストの場合201Createdを返す() throws Exception {
+
+        Client client = new Client(
+            "Example株式会社",
+            "contact@example.com",
+            "テストクライアント"
+        );
+
         Project project = new Project(
+                client,
                 "Example案件",
                 ContractType.FIXED_PRICE,
                 100000,
@@ -52,6 +61,7 @@ public class ProjectControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                         {
+                            "clientId": 1,
                             "name": "Example案件",
                             "contractType": "FIXED_PRICE",
                             "unitPrice": 100000,
@@ -75,7 +85,15 @@ public class ProjectControllerTest {
 
     @Test
     void update_存在するIDの場合Projectを更新できる() throws Exception {
+
+        Client client = new Client(
+                "Example株式会社",
+                "contact@example.com",
+                "テストクライアント"
+        );
+
         Project project = new Project(
+                client,
                 "Updated案件",
                 ContractType.FIXED_PRICE,
                 100000,
@@ -116,7 +134,15 @@ public class ProjectControllerTest {
 
     @Test
     void findAll_Project一覧を取得できる() throws Exception {
+
+        Client client = new Client(
+                "Example株式会社",
+                "contact@example.com",
+                "テストクライアント"
+        );
+
         Project project = new Project(
+                client,
                 "Example案件",
                 ContractType.FIXED_PRICE,
                 100000,
@@ -144,7 +170,15 @@ public class ProjectControllerTest {
 
     @Test
     void findById_存在するIDの場合Projectを取得できる() throws Exception {
+
+        Client client = new Client(
+                "Example株式会社",
+                "contact@example.com",
+                "テストクライアント"
+        );
+
         Project project = new Project(
+                client,
                 "Example案件",
                 ContractType.FIXED_PRICE,
                 100000,
@@ -217,6 +251,7 @@ public class ProjectControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                         {
+                          "clientId": 1,
                           "name": "業務管理システム開発",
                           "contractType": "MONTHLY",
                           "unitPrice": 600000,
@@ -239,6 +274,7 @@ public class ProjectControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                         {
+                          "clientId": 1,
                           "name": "業務管理システム開発",
                           "contractType": "INVALID",
                           "unitPrice": 600000,
@@ -264,6 +300,7 @@ public class ProjectControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                         {
+                          "clientId": 1,
                           "name": "業務管理システム開発",
                           "contractType": "MONTHLY",
                           "unitPrice": 600000,

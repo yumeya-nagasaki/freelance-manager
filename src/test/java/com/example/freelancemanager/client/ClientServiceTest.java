@@ -3,6 +3,7 @@ package com.example.freelancemanager.client;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -15,14 +16,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.example.freelancemanager.common.ConflictException;
 import com.example.freelancemanager.common.NotFoundException;
+import com.example.freelancemanager.project.ProjectRepository;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("null")
 public class ClientServiceTest {
-    
+
     @Mock
     private ClientRepository clientRepository;
+
+    @Mock
+    private ProjectRepository projectRepository;
 
     @InjectMocks
     private ClientService clientService;
@@ -30,16 +36,14 @@ public class ClientServiceTest {
     @Test
     void create_正常にClientを登録できる() {
         ClientCreateRequest request = new ClientCreateRequest(
-            "Example株式会社",
-            "contact@example.com",
-            "初回登録"
-        );
+                "Example株式会社",
+                "contact@example.com",
+                "初回登録");
 
         Client savedClient = new Client(
-            "Example株式会社",
-            "contact@example.com",
-            "初回登録"
-        );
+                "Example株式会社",
+                "contact@example.com",
+                "初回登録");
 
         when(clientRepository.save(notNull(Client.class))).thenReturn(savedClient);
 
@@ -53,10 +57,9 @@ public class ClientServiceTest {
     @Test
     void findAll_Client一覧を取得できる() {
         Client client = new Client(
-            "Example株式会社",
-            "contact@example.com",
-            "初回登録"
-        );
+                "Example株式会社",
+                "contact@example.com",
+                "初回登録");
 
         when(clientRepository.findAll()).thenReturn(List.of(client));
 
@@ -69,10 +72,9 @@ public class ClientServiceTest {
     @Test
     void findById_存在するIDの場合Clientを取得できる() {
         Client client = new Client(
-            "Example株式会社",
-            "contact@example.com",
-            "初回登録"
-        );
+                "Example株式会社",
+                "contact@example.com",
+                "初回登録");
 
         when(clientRepository.findById(1L)).thenReturn(Optional.of(client));
 
@@ -86,23 +88,21 @@ public class ClientServiceTest {
         when(clientRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> clientService.findById(999L))
-            .isInstanceOf(NotFoundException.class)
-            .hasMessage("client not found. id=999");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("client not found. id=999");
     }
 
     @Test
     void update_存在するIDの場合Clientを更新できる() {
         Client client = new Client(
-            "Example株式会社",
-            "contact@example.com",
-            "初回登録"
-        );
+                "Example株式会社",
+                "contact@example.com",
+                "初回登録");
 
         ClientUpdateRequest request = new ClientUpdateRequest(
-            "Updated株式会社",
-            "updated@example.com",
-            "更新済み"
-        );
+                "Updated株式会社",
+                "updated@example.com",
+                "更新済み");
 
         when(clientRepository.findById(1L)).thenReturn(Optional.of(client));
 
@@ -114,8 +114,9 @@ public class ClientServiceTest {
     }
 
     @Test
-    void delete_存在するIDの場合Clientを削除できる() {
+    void delete_存在するIDかつProjectが存在しない場合Clientを削除できる() {
         when(clientRepository.existsById(1L)).thenReturn(true);
+        when(projectRepository.existsByClientId(1L)).thenReturn(false);
 
         clientService.delete(1L);
 
@@ -127,7 +128,19 @@ public class ClientServiceTest {
         when(clientRepository.existsById(999L)).thenReturn(false);
 
         assertThatThrownBy(() -> clientService.delete(999L))
-            .isInstanceOf(NotFoundException.class)
-            .hasMessage("client not found. id=999");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("client not found. id=999");
+    }
+
+    @Test
+    void delete_Projectが存在するClientの場合ConflictExceptionが発生する() {
+        when(clientRepository.existsById(1L)).thenReturn(true);
+        when(projectRepository.existsByClientId(1L)).thenReturn(true);
+
+        assertThatThrownBy(() -> clientService.delete(1L))
+                .isInstanceOf(ConflictException.class)
+                .hasMessage("client has projects. id=1");
+
+        verify(clientRepository, never()).deleteById(1L);
     }
 }

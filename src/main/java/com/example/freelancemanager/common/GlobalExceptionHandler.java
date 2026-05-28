@@ -109,4 +109,21 @@ public class GlobalExceptionHandler {
 
         return values;
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflictException(
+        ConflictException ex, HttpServletRequest request
+    ) {
+
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        ErrorResponse response = new ErrorResponse(
+            status.value(), 
+            status.getReasonPhrase(), 
+            ex.getMessage(), 
+            request.getRequestURI()
+        );
+
+        return ResponseEntity.status(status).body(response);
+    }
 }
