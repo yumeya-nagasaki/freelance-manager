@@ -1,5 +1,7 @@
 # フリーランス向け案件管理システム
 
+![Java CI](https://github.com/yumeya-nagasaki/freelance-manager/actions/workflows/ci.yml/badge.svg)
+
 フリーランスエンジニア向けの案件管理APIです。
 
 クライアント情報、案件情報を管理し、クライアントごとに案件を紐づけて管理できるようにしています。
