@@ -1,5 +1,7 @@
 package com.example.freelancemanager.worklog;
 
+import java.util.List;
+
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,18 @@ public class WorkLogService {
         );
 
         return new WorkLogResponse(workLog);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkLogResponse> findByProjectId(@NonNull Long projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new NotFoundException("project not found. id=" + projectId);
+        }
+
+        return workLogRepository.findByProjectId(projectId)
+            .stream()
+            .map(WorkLogResponse::new)
+            .toList();
     }
 
     public void delete(@NonNull Long id) {
