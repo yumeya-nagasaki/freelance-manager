@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.freelancemanager.client.Client;
 import com.example.freelancemanager.client.ClientRepository;
+import com.example.freelancemanager.common.ConflictException;
 import com.example.freelancemanager.common.NotFoundException;
+import com.example.freelancemanager.worklog.WorkLogRepository;
 
 @Service
 @Transactional
@@ -17,13 +19,16 @@ public class ProjectService {
     
     private final ProjectRepository projectRepository;
     private final ClientRepository clientRepository;
+    private final WorkLogRepository workLogRepository;
 
     public ProjectService(
             ProjectRepository projectRepository,
-            ClientRepository clientRepository
+            ClientRepository clientRepository,
+            WorkLogRepository workLogRepository
     ) {
         this.projectRepository = projectRepository;
         this.clientRepository = clientRepository;
+        this.workLogRepository = workLogRepository;
     }
 
     public ProjectResponse create(ProjectCreateRequest request) {
@@ -77,6 +82,10 @@ public class ProjectService {
     public void delete(@NonNull Long id) {
         if (!projectRepository.existsById(id)) {
             throw new NotFoundException("project not found. id=" + id);
+        }
+
+        if (workLogRepository.existsByProjectId(id)) {
+            throw new ConflictException("project has work logs. id=" + id);
         }
 
         projectRepository.deleteById(id);
