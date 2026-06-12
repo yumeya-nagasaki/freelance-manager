@@ -1,6 +1,7 @@
 package com.example.freelancemanager.project;
 
 import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,7 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.freelancemanager.client.Client;
 import com.example.freelancemanager.client.ClientRepository;
+import com.example.freelancemanager.common.ConflictException;
 import com.example.freelancemanager.common.NotFoundException;
+import com.example.freelancemanager.worklog.WorkLogRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -30,6 +33,9 @@ public class ProjectServiceTest {
 
     @Mock
     private ClientRepository clientRepository;
+
+    @Mock
+    private WorkLogRepository workLogRepository;
 
     @InjectMocks
     private ProjectService projectService;
@@ -191,6 +197,7 @@ public class ProjectServiceTest {
     void delete_存在するIDの場合Projectを削除できる() {
 
         when(projectRepository.existsById(1L)).thenReturn(true);
+        when(workLogRepository.existsByProjectId(1L)).thenReturn(false);
 
         projectService.delete(1L);
 
@@ -204,5 +211,17 @@ public class ProjectServiceTest {
         assertThatThrownBy(() -> projectService.delete(999L))
             .isInstanceOf(NotFoundException.class)
             .hasMessage("project not found. id=999");
+    }
+
+    @Test
+    void delete_WorkLogが存在するProjectの場合ConflictExceptionが発生する() {
+        when(projectRepository.existsById(1L)).thenReturn(true);
+        when(workLogRepository.existsByProjectId(1L)).thenReturn(true);
+
+        assertThatThrownBy(() -> projectService.delete(1L))
+            .isInstanceOf(ConflictException.class)
+            .hasMessage("project has work logs. id=1");
+
+        verify(projectRepository, never()).deleteById(1L);
     }
 }

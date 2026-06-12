@@ -101,6 +101,7 @@ Client 1 --- * Project
 - [Client CRUD API設計](docs/client-api.md)
 - [Project CRUD API設計](docs/project-api.md)
 - [ClientとProjectの紐付け](docs/client-project-relation.md)
+- [WorkLog CRUD API設計](docs/work-log-api.md)
 
 ## パッケージ構成
 
@@ -247,6 +248,25 @@ Invoke-RestMethod `
 Invoke-RestMethod `
   -Uri "http://localhost:8080/api/clients/1/projects" `
   -Method Get
+```
+
+### WorkLog登録
+
+```powershell
+$body = @{
+  projectId = 1
+  workDate = "2026-06-03"
+  hours = 7.5
+  description = "案件管理APIのProject CRUD実装とテスト作成"
+} | ConvertTo-Json
+
+$utf8Body = [System.Text.Encoding]::UTF8.GetBytes($body)
+
+Invoke-RestMethod `
+  -Uri "http://localhost:8080/api/projects/1/work-logs" `
+  -Method Post `
+  -ContentType "application/json; charset=utf-8" `
+  -Body $utf8Body
 ```
 
 ## エラーレスポンス例

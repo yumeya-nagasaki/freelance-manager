@@ -189,3 +189,15 @@ Invoke-RestMethod:
   "timestamp": "2026-05-18T22:00:00.0000000"
 }
 ```
+
+* ProjectにWorkLogが紐づいている場合、Projectは削除できません。409 Conflictが返却されます
+
+```text
+{
+  "status": 409,
+  "error": "Conflict",
+  "message": "project has work logs. id=1",
+  "path": "/api/projects/1",
+  "timestamp": "2026-05-18T22:00:00"
+}
+```

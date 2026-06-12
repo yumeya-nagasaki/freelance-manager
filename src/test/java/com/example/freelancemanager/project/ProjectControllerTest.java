@@ -10,10 +10,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.freelancemanager.client.Client;
+import com.example.freelancemanager.common.ConflictException;
 import com.example.freelancemanager.common.NotFoundException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import org.springframework.http.MediaType;
@@ -318,5 +320,19 @@ public class ProjectControllerTest {
                         "status：指定された値が不正です。使用可能な値： PREPARING, ACTIVE, SUSPENDED, COMPLETED, CANCELED"
                 ))
                 .andExpect(jsonPath("$.path").value("/api/projects"));
+    }
+
+    @Test
+    void delete_WorkLogが存在するProjectの場合409Conflictを返す() throws Exception {
+        doThrow(new ConflictException("project has work logs. id=1"))
+                .when(projectService)
+                .delete(1L);
+        
+        mockMvc.perform(delete("/api/projects/1"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.error").value("Conflict"))
+                .andExpect(jsonPath("$.message").value("project has work logs. id=1"))
+                .andExpect(jsonPath("$.path").value("/api/projects/1"));
     }
 }
