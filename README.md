@@ -151,6 +151,7 @@ D --> E[Database]
 - Java 21
 - Git
 - Gradle Wrapperを使用
+- PostgreSQLを使用する場合はDocker
 
 ### リポジトリを取得
 
@@ -167,10 +168,17 @@ macOS / Linux の場合:
 ./gradlew bootRun
 ```
 
-Windows PowerShell の場合:
+Windows PowerShell の場合(DBにH2を使用する場合):
 
 ```powershell
-gradlew.bat bootRun
+.\gradlew.bat bootRun
+```
+
+Windows PowerShell の場合(DBにPostgreSQLを使用する場合):
+
+```powershell
+docker compose up -d
+$env:SPRING_PROFILES_ACTIVE="local"; .\gradlew.bat bootRun
 ```
 
 起動後、以下のURLでAPIにアクセスできます。
@@ -190,7 +198,7 @@ macOS / Linux の場合:
 Windows PowerShell の場合:
 
 ```powershell
-gradlew.bat test
+.\gradlew.bat test
 ```
 
 ## 動作確認例
