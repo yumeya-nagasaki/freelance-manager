@@ -21,7 +21,6 @@ import com.example.freelancemanager.common.NotFoundException;
 import com.example.freelancemanager.project.ProjectRepository;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("null")
 public class ClientServiceTest {
 
     @Mock

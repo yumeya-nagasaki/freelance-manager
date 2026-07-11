@@ -2,7 +2,6 @@ package com.example.freelancemanager.client;
 
 import java.util.List;
 
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,14 +37,14 @@ public class ClientService {
     }
 
     @Transactional(readOnly = true)
-    public ClientResponse findById(@NonNull Long id) {
+    public ClientResponse findById(Long id) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("client not found. id=" + id));
         
         return new ClientResponse(client);
     }
 
-    public ClientResponse update(@NonNull Long id, ClientUpdateRequest request) {
+    public ClientResponse update(Long id, ClientUpdateRequest request) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("client not found. id=" + id));
         
@@ -55,7 +54,7 @@ public class ClientService {
         return new ClientResponse(client);
     }
 
-    public void delete(@NonNull Long id) {
+    public void delete(Long id) {
         if (!clientRepository.existsById(id)) {
             throw new NotFoundException("client not found. id=" + id);
         }

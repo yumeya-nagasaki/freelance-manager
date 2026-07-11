@@ -27,7 +27,6 @@ import com.example.freelancemanager.project.ProjectRepository;
 import com.example.freelancemanager.project.ProjectStatus;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("null")
 class WorkLogServiceTest {
     
     @Mock

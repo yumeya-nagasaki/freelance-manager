@@ -11,7 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import tools.jackson.databind.exc.InvalidFormatException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -95,7 +95,7 @@ public class GlobalExceptionHandler {
             return "unknown";
         }
 
-        return ex.getPath().get(ex.getPath().size() - 1).getFieldName();
+        return ex.getPath().get(ex.getPath().size() - 1).getPropertyName();
     }
 
     private String[] getEnumValues(Class<?> enumType) {

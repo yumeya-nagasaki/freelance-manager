@@ -3,7 +3,6 @@ package com.example.freelancemanager.project;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,18 +40,18 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ProjectResponse findById(@PathVariable @NonNull Long id) {
+    public ProjectResponse findById(@PathVariable Long id) {
         return projectService.findById(id);
     }
     
     @PutMapping("/{id}")
-    public ProjectResponse update(@PathVariable @NonNull Long id, @Valid @RequestBody ProjectUpdateRequest request) {
+    public ProjectResponse update(@PathVariable Long id, @Valid @RequestBody ProjectUpdateRequest request) {
         return projectService.update(id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable @NonNull Long id) {
+    public void delete(@PathVariable Long id) {
         projectService.delete(id);
     }
 }
