@@ -2,7 +2,6 @@ package com.example.freelancemanager.worklog;
 
 import java.util.List;
 
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,7 @@ public class WorkLogService {
         this.projectRepository = projectRepository;
     }
 
-    public WorkLogResponse create(@NonNull Long projectId, WorkLogCreateRequest request) {
+    public WorkLogResponse create(Long projectId, WorkLogCreateRequest request) {
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> new NotFoundException("project not found. id=" + projectId));
 
@@ -39,14 +38,14 @@ public class WorkLogService {
     }
 
     @Transactional(readOnly = true)
-    public WorkLogResponse findById(@NonNull Long id) {
+    public WorkLogResponse findById(Long id) {
         WorkLog workLog = workLogRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("work log not found. id=" + id));
 
         return new WorkLogResponse(workLog);
     }
 
-    public WorkLogResponse update(@NonNull Long id, WorkLogUpdateRequest request) {
+    public WorkLogResponse update(Long id, WorkLogUpdateRequest request) {
         WorkLog workLog = workLogRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("work log not found. id=" + id));
 
@@ -60,7 +59,7 @@ public class WorkLogService {
     }
 
     @Transactional(readOnly = true)
-    public List<WorkLogResponse> findByProjectId(@NonNull Long projectId) {
+    public List<WorkLogResponse> findByProjectId(Long projectId) {
         if (!projectRepository.existsById(projectId)) {
             throw new NotFoundException("project not found. id=" + projectId);
         }
@@ -71,7 +70,7 @@ public class WorkLogService {
             .toList();
     }
 
-    public void delete(@NonNull Long id) {
+    public void delete(Long id) {
         if (!workLogRepository.existsById(id)) {
             throw new NotFoundException("work log not found. id=" + id);
         }

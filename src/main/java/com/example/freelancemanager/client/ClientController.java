@@ -3,7 +3,6 @@ package com.example.freelancemanager.client;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,23 +45,23 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ClientResponse findById(@PathVariable @NonNull Long id) {
+    public ClientResponse findById(@PathVariable Long id) {
         return clientService.findById(id);
     }
     
     @PutMapping("/{id}")
-    public ClientResponse update(@PathVariable @NonNull Long id, @Valid @RequestBody ClientUpdateRequest request) {
+    public ClientResponse update(@PathVariable Long id, @Valid @RequestBody ClientUpdateRequest request) {
         return clientService.update(id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable @NonNull Long id) {
+    public void delete(@PathVariable Long id) {
         clientService.delete(id);
     }
 
     @GetMapping("/{id}/projects")
-    public List<ProjectResponse> findProjectsByClientId(@PathVariable @NonNull Long id) {
+    public List<ProjectResponse> findProjectsByClientId(@PathVariable Long id) {
         return projectService.findByClientId(id);
     }
 }

@@ -3,7 +3,6 @@ package com.example.freelancemanager.project;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,13 +60,13 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public ProjectResponse findById(@NonNull Long id) {
+    public ProjectResponse findById(Long id) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("project not found. id=" + id));
         return new ProjectResponse(project);
     }
 
-    public ProjectResponse update(@NonNull Long id, ProjectUpdateRequest request) {
+    public ProjectResponse update(Long id, ProjectUpdateRequest request) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("project not found. id=" + id));
 
@@ -79,7 +78,7 @@ public class ProjectService {
         return new ProjectResponse(project);
     }
 
-    public void delete(@NonNull Long id) {
+    public void delete(Long id) {
         if (!projectRepository.existsById(id)) {
             throw new NotFoundException("project not found. id=" + id);
         }
@@ -92,7 +91,7 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProjectResponse> findByClientId(@NonNull Long clientId) {
+    public List<ProjectResponse> findByClientId(Long clientId) {
         if (!clientRepository.existsById(clientId)) {
             throw new NotFoundException("client not found. id=" + clientId);
         }
