@@ -65,7 +65,8 @@ Client 1 --- * Project
 | フレームワーク | Spring Boot |
 | Web | Spring Web |
 | ORM | Spring Data JPA |
-| DB | H2 Database |
+| DB | PostgreSQL,H2 Database |
+| Migration | Flyway |
 | Validation | Bean Validation |
 | Test | JUnit, Mockito, MockMvc |
 | CI | GitHub Actions |
@@ -316,6 +317,90 @@ Projectが紐づいているClientを削除しようとした場合、`409 Confl
   "timestamp": "2026-05-18T22:00:00"
 }
 ```
+
+## データベース構成
+
+ローカル開発環境では、Docker Composeで起動したPostgreSQLを使用します。
+
+データベースのスキーマはFlywayで管理しています。
+Hibernateによる自動テーブル作成は使用せず、マイグレーションSQLを用いてスキーマを作成・変更します。
+
+| 項目 | 仕様技術 |
+| --- | --- |
+| Database | PostgreSQL |
+| Database起動 | Docker Compose |
+| Migration | Flyway |
+| ORM | Spring Data JPA, Hibernate |
+
+## Flywayによるマイグレーション管理
+
+マイグレーションSQLは以下のディレクトリに配置します。
+
+```text
+src/main/resources/db/migration
+```
+
+現在の初期スキーマは、以下のファイルで管理しています。
+
+```text
+V1__create_initial_schema.sql
+```
+
+アプリケーション起動時に、未適用のマイグレーションが自動的に実行されます。
+
+Flywayが実行したマイグレーションの履歴は、PostgreSQL内の以下のテーブルに記録されます。
+
+```text
+flyway_schema_history
+```
+
+## マイグレーションファイルの命名規則
+
+マイグレーションファイルは、以下の形式で作成します。
+
+```text
+V{バージョン番号}__{変更内容}.sql
+
+例:
+
+V1__create_initial_schema.sql
+V2__create_invoices_table.sql
+V3__add_billing_status_to_projects.sql
+```
+
+バージョン番号と説明の間には、アンダースコアを2つ記載します。
+
+## スキーマ変更時のルール
+
+一度適用したマイグレーションファイルは、原則として変更しません。
+
+スキーマを変更する場合は、既存ファイルを書き換えず、新しいバージョンのマイグレーションファイルを追加します。
+
+例えば、`projects` テーブルにカラムを追加する場合は、以下のようなファイルを追加します。
+
+```sql
+V2__add_column_to_projects.sql
+
+ALTER TABLE projects
+ADD COLUMN example_column VARCHAR(255);
+```
+
+この方針により、データベースの変更履歴をGit上で確認できるようにしています。
+
+## Hibernateの設定
+
+PostgreSQLを使用する `local` プロファイルでは、Hibernateの設定を以下のようにしています。
+
+```yml
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+```
+
+`validate` を指定することで、HibernateはEntityとデータベース定義の整合性を確認しますが、テーブルの作成や変更は行いません。
+
+スキーマの変更はFlywayに集約しています。
 
 ## 今後の実装予定
 
