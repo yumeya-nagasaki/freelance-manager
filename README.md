@@ -71,6 +71,7 @@ Client 1 --- * Project
 | Test | JUnit, Mockito, MockMvc |
 | CI | GitHub Actions |
 | Build Tool | Gradle |
+| Container | Docker, Docker Compose |
 
 ## API一覧
 
@@ -161,7 +162,44 @@ git clone https://github.com/yumeya-nagasaki/freelance-manager.git
 cd freelance-manager
 ```
 
-### アプリケーション起動
+### アプリケーションを起動
+
+以下のコマンドを実行することでアプリケーションとデータベース両方を起動します
+
+```powershell
+docker compose up --build -d
+```
+
+コンテナの状態を確認します。
+
+```powershell
+docker compose ps
+```
+
+以下のコンテナが起動していれば成功です。
+
+```text
+freelance-manager-app
+freelance-manager-db
+```
+
+### ログの確認
+
+Spring Bootアプリケーションだけを確認する場合は、以下を実行します。
+
+```powershell
+docker compose logs -f app
+```
+
+PostgreSQLだけを確認する場合は、以下を実行します。
+
+```powershell
+docker compose logs -f db
+```
+
+ログ表示は`Ctrl + C`で終了できます。ログ表示を終了しても、コンテナは停止しません。
+
+### ローカルで直接Spring Bootを起動
 
 macOS / Linux の場合:
 

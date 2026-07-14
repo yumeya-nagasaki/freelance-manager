@@ -4,3 +4,6 @@ spring:
   
   flyway:
     enabled: false
+
+server:
+  port: ${PORT:8080}
