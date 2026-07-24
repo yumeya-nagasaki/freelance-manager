@@ -240,6 +240,20 @@ Windows PowerShell の場合:
 .\gradlew.bat test
 ```
 
+## APIドキュメント
+
+アプリケーション起動後、Swagger UIからAPI仕様の確認とAPIの実行ができます。
+
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+
+Swagger UIでは、Client、Project、WorkLogの各APIについて、以下を確認できます。
+
+- リクエスト・レスポンス仕様
+- 入力項目とサンプル値
+- HTTPステータスコード
+- 400、404、409などのエラーレスポンス
+
 ## 動作確認例
 
 ### Client登録
