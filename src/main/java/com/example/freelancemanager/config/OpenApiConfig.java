@@ -1,10 +1,13 @@
 package com.example.freelancemanager.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
 public class OpenApiConfig {
@@ -15,6 +18,11 @@ public class OpenApiConfig {
             .info(new Info()
                 .title("Freelance Manager API")
                 .description("フリーランス向け案件・取引先・作業記録管理API")
-                .version("1.0.0"));
+                .version("1.0.0"))
+            .servers(List.of(
+                new Server()
+                    .url("/")
+                    .description("Current server")
+            ));
     }
 }
