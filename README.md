@@ -475,3 +475,85 @@ spring:
 - Service / Controller のテスト
 - GitHub ActionsによるCI
 - Pull Requestベースの開発フロー
+
+## フロントエンド
+
+フロントエンドはReact + TypeScript + Viteで構成しています。
+
+### 使用技術
+
+* React
+* TypeScript
+* Vite
+* React Router
+* TanStack Query
+
+### 起動方法
+
+バックエンドを起動します。
+
+```bash
+docker compose up --build -d
+```
+
+フロントエンドディレクトリへ移動します。
+
+```bash
+cd frontend
+```
+
+依存関係をインストールします。
+
+```bash
+npm install
+```
+
+開発サーバを起動します。
+
+```bash
+npm run dev
+```
+
+ブラウザで以下のURLを開きます。
+
+```
+http://localhost:5173/clients
+```
+
+### API接続設定
+
+ローカル開発環境では、`frontend/.env.local`にAPIの接続先を設定します。
+
+```
+VITE_API_BASE_URL=http://localhost:8080
+```
+
+Client一覧画面では、以下のAPIを使用します。
+
+```
+GET /api/clients
+```
+
+### CORS
+
+ローカル開発では、フロントエンドとバックエンドが異なるオリジンで起動します。
+
+```
+Frontend: http://localhost:5173
+Backend:  http://localhost:8080
+```
+
+そのため、Spring Boot側で`http://localhost:5173`からのAPIアクセスを許可しています。
+
+### 動作確認
+
+```bash
+npm run lint
+npm run build
+```
+
+Client一覧画面では以下を確認できます。
+
+* Spring Boot APIから取得した取引先一覧の表示
+* API通信中のローディング表示
+* APIエラー発生時のエラー表示
